@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect } from "react";
+import useState from "react-usestateref";
 import style from "./App.module.scss";
 import InputBox from "./components/Input/InputBx";
 import SideBar from "./components/SideBar/SideBar";
@@ -8,10 +9,10 @@ import Enny from "./images/enny.svg";
 import User from "./images/user.svg";
 
 function App() {
-  const [prompt, setPrompt] = useState("");
-  const [reply, setReply] = useState();
-  const [voices, setVoices] = useState([]);
-  const [transcript, setTranscript] = useState();
+  const [prompt, setPrompt, promptRef] = useState("");
+  const [reply, setReply, replyRef] = useState();
+  const [voices, setVoices, voicesRef] = useState([]);
+  const [transcript, setTranscript, transcriptRef] = useState();
 
   const form = document.querySelector("form");
   const record = document.querySelector("#record");
@@ -92,6 +93,48 @@ function App() {
     //let letters = /[a-zA-Z]/;
     setPrompt(value);
   };
+
+  useEffect(() => {
+    const getVoices = () => {
+      //voices =
+      setVoices(synth.getVoices());
+    };
+    getVoices();
+    synth.onvoiceschanged = getVoices;
+  }, []);
+
+  // Speak
+  const aiSpeak = () => {
+    // Check if speaking
+    if (synth.speaking) {
+      console.error("Already speaking...");
+      return;
+    }
+
+    if (prompt !== "") {
+      // Get speak text
+      const speakText = new SpeechSynthesisUtterance(replyRef.current);
+
+      // Speak end
+      speakText.onend = (e) => {
+        console.log("Done speaking...");
+      };
+
+      // Speak error
+      speakText.onerror = (e) => {
+        console.error("Something went wrong");
+      };
+
+      speakText.rate = 1;
+      speakText.pitch = 0.7;
+      speakText.lang = "en-GB";
+      speakText.voice = voices[50];
+      // Speak
+      synth.cancel();
+      synth.speak(speakText);
+    }
+  };
+
   const handleSubmit = async () => {
     //e.preventDefault();
 
@@ -118,35 +161,37 @@ function App() {
     // messageDiv.innerHTML = "..."
     loader(messageDiv);
     console.log("what im sending", prompt);
-    // const response = await fetch("http://localhost:5000/", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //     prompt: data.get("prompt"),
-    //     //prompt: transcript,
-    //   }),
-    // });
+    const response = await fetch("http://localhost:5000/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        prompt: prompt,
+        //prompt: transcript,
+      }),
+    });
 
     clearInterval(loadInterval);
     messageDiv.innerHTML = " ";
 
-    // if (response.ok) {
-    //   const data = await response.json();
-    //   const parsedData = data.bot.trim(); // trims any trailing spaces/'\n'
-    //   // readOutLoud(parsedData);
-    //   //reply = parsedData;
-    //   //speak();
+    if (response.ok) {
+      const data = await response.json();
+      const parsedData = data.bot.trim(); // trims any trailing spaces/'\n'
+      console.log("aires>>", parsedData);
+      setReply(parsedData);
+      typeText(messageDiv, parsedData);
+      aiSpeak();
+    } else {
+      const err = await response.text();
 
-    // } else {
-    //   const err = await response.text();
+      messageDiv.innerHTML = "Something went wrong";
+      alert(err);
+    }
 
-    //   messageDiv.innerHTML = "Something went wrong";
-    //   alert(err);
-    // }
-    //
-    //typeText(messageDiv, parsedData);
+    // setReply(prompt);
+    // typeText(messageDiv, prompt);
+    // aiSpeak();
   };
 
   return (
