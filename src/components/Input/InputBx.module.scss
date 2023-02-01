@@ -1,0 +1,55 @@
+.container {
+  position: fixed;
+  background: #000;
+  bottom: 0;
+  margin-left: 12%;
+  width: 65%;
+  border-top: 2px solid #292929;
+  padding: 0.7em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  //
+}
+.micCircle {
+  // background: pink;
+  cursor: pointer;
+}
+.formBx {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  //width: 100%;
+  //background: lavender;
+
+  form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    //width: 100%;
+    position: relative;
+    input {
+      position: relative;
+      //width: 90%;
+      width: 657px;
+      height: 66.19px;
+      background: #202327;
+      border-radius: 50px;
+      // padding: 0 1em;
+      outline: none;
+      border: 0;
+      color: #fff;
+      font-size: 18px;
+
+      padding: 1em;
+    }
+    .submitText {
+      position: relative;
+      //background: pink;
+      // position: fixed;
+      margin-left: -40px;
+      cursor: pointer;
+    }
+  }
+}

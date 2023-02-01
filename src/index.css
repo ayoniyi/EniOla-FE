@@ -1,13 +1,197 @@
+@font-face {
+  src: url(./font/PT-Median.otf);
+  font-family: Pt-Med;
+}
+@font-face {
+  src: url(./font/PT-Neutral.otf);
+  font-family: Pt-N;
+}
+@font-face {
+  src: url(./font/Aeonik-Regular.otf);
+  font-family: aeonik;
+}
+html,
 body {
+  padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-family: Pt-N, Averta, Helvetica, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
+    "Open Sans", "Helvetica Neue", sans-serif;
+  font-display: swap;
+}
+body {
+  width: 100%;
+  overflow-x: hidden;
+  background: #000;
+  color: #fff;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+* {
+  box-sizing: border-box;
+}
+html {
+  overflow-y: scroll;
+  height: 100%;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+button {
+  cursor: pointer;
+}
+button:disabled {
+  opacity: 0.9;
+  /* filter: blur(1.5px); */
+  pointer-events: none;
+  transition: 0.2s ease-in;
+}
+li {
+  list-style: none;
+}
+input,
+select,
+textarea {
+  font-size: 100%;
+}
+input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* chat */
+/* chat */
+/* chat */
+/* chat */
+/* chat */
+
+#chat_container {
+  flex: 1;
+  /* width: 100%; */
+  height: 100%;
+  overflow-y: scroll;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  /* padding-bottom: 20px; */
+  scroll-behavior: smooth;
+  position: relative;
+}
+
+/* hides scrollbar */
+
+#chat_container::-webkit-scrollbar {
+  display: none;
+}
+
+/* .wrapper { */
+/* width: 100%;
+  padding: 15px; */
+/* position: relative; */
+/* } */
+
+.ai {
+  margin-top: 5px;
+  width: 50%;
+  /* background: #40414f; */
+}
+.user {
+  width: 50%;
+  margin-left: 50%;
+  /* background: pink; */
+}
+.ai .chat {
+  /* width: 100%; */
+  width: auto;
+  margin: 0 auto;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+.user .chat {
+  /* background: pink; */
+  /* position: fixed;
+  right: 1em; */
+  /* margin-left: 88%; */
+
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 10px;
+  align-items: center;
+}
+
+.profile {
+  /* width: 36px;
+  height: 36px;
+  border-radius: 5px;
+
+  background: #5436da; */
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* .ai .profile {
+  background: #10a37f;
+} */
+
+.profile img {
+  width: 100%;
+  height: 100%;
+  min-width: 45px;
+  object-fit: contain;
+}
+
+.messages {
+  /* flex: 1; */
+  /* padding: 1em 1.5em;
+  display: flex; */
+
+  /* min-width: 60px;
+  width: 100%; */
+  /* font-size: 14px; */
+
+  /* max-width: 100%; */
+  /* overflow-x: scroll; */
+
+  /*
+   * white space refers to any spaces, tabs, or newline characters that are used to format the CSS code
+   * specifies how white space within an element should be handled. It is similar to the "pre" value, which tells the browser to treat all white space as significant and to preserve it exactly as it appears in the source code.
+   * The pre-wrap value allows the browser to wrap long lines of text onto multiple lines if necessary.
+   * The default value for the white-space property in CSS is "normal". This tells the browser to collapse multiple white space characters into a single space, and to wrap text onto multiple lines as needed to fit within its container.
+  */
+  /* white-space: pre-wrap;
+
+  -ms-overflow-style: none; */
+  /* scrollbar-width: none; */
+}
+.messages {
+  width: auto;
+  padding: 1em 1.5em;
+  font-size: 14px;
+}
+.ai .chat .messages {
+  border-radius: 20px 50px 50px 0px;
+  background: #2f3336;
+}
+.user .chat .messages {
+  background: #6551f3;
+  border-radius: 30px 30px 0px 30px;
+  /* width: 10%; */
+}
+
+/* hides scrollbar */
+.message::-webkit-scrollbar {
+  display: none;
 }
