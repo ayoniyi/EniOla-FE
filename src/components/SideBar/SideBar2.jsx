@@ -21,8 +21,14 @@ const SideBar2 = () => {
                   This is a conversational AI app called EniOla. <br />
                   You can either type a message or speak to EniOla by recording
                   a message. <br />
-                  Click the mic to record and once you stop talking your message
-                  is automatically sent.
+                </p>
+                <p>
+                  {" "}
+                  <span>
+                    {" "}
+                    Click the mic to record and once you stop talking your
+                    message is automatically sent.
+                  </span>
                 </p>
                 <p>
                   EniOla might not speak to you depending on browser

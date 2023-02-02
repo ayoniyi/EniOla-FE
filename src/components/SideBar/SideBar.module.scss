@@ -50,6 +50,7 @@
     }
     p {
       margin-top: -6px;
+      color: rgb(187, 184, 184);
     }
     .title {
       //   background: pink;
@@ -63,6 +64,10 @@
     padding: 1em 3em;
     p {
       color: rgb(187, 184, 184);
+      // font-family: "Luminari";
+    }
+    span {
+      font-size: 0.8em;
     }
   }
 }

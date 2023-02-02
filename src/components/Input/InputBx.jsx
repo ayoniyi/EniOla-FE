@@ -12,9 +12,9 @@ const InputBox = ({
   return (
     <>
       <div className={style.container}>
-        <div className={style.micCircle}>
+        <button disabled={recording} className={style.micCircle}>
           <img id="record" src={Mic} alt="microphone" onClick={handleRecord} />
-        </div>
+        </button>
         <div className={style.formBx}>
           <form onSubmit={handleSubmit}>
             {/* <textarea

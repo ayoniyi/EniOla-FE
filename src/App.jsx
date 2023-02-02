@@ -114,7 +114,8 @@ function App() {
       console.error("Something went wrong");
     };
 
-    speakText.rate = 1;
+    speakText.rate =
+      replyRef.current.length >= 150 && replyRef.current.length < 252 ? 1.2 : 1;
     speakText.pitch = 0.7;
     speakText.lang = "en-GB";
     speakText.voice = voices[50];
@@ -126,58 +127,77 @@ function App() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (prompt !== "" && prompt.length >= 5) {
-      // user's chatstripe
-      //chatContainer.innerHTML += chatStripe(false, transcript);
-      chatContainer.innerHTML += chatStripe(false, prompt);
+    if (navigator.onLine) {
+      if (prompt !== "" && prompt.length >= 5) {
+        // user's chatstripe
+        //chatContainer.innerHTML += chatStripe(false, transcript);
+        chatContainer.innerHTML += chatStripe(false, prompt);
 
-      // to clear the textarea input
-      setPrompt("");
+        // to clear the textarea input
+        setPrompt("");
 
-      // bot's chatstripe
-      const uniqueId = generateUniqueId();
-      chatContainer.innerHTML += chatStripe(true, " ", uniqueId);
+        // bot's chatstripe
+        const uniqueId = generateUniqueId();
+        chatContainer.innerHTML += chatStripe(true, " ", uniqueId);
 
-      // to focus scroll to the bottom
-      chatContainer.scrollTop = chatContainer.scrollHeight;
+        // to focus scroll to the bottom
+        chatContainer.scrollTop = chatContainer.scrollHeight;
 
-      // specific message div
-      const messageDiv = document.getElementById(uniqueId);
+        // specific message div
+        const messageDiv = document.getElementById(uniqueId);
 
-      // messageDiv.innerHTML = "..."
-      loader(messageDiv);
-      console.log("what im sending", prompt);
-      const response = await fetch("http://localhost:5000/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          prompt: prompt,
-          //prompt: transcript,
-        }),
-      });
+        // messageDiv.innerHTML = "..."
 
-      clearInterval(loadInterval);
-      messageDiv.innerHTML = " ";
+        try {
+          loader(messageDiv);
+          console.log("what im sending", prompt);
+          const response = await fetch(
+            "https://odd-puce-betta-wrap.cyclic.app/",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                prompt: prompt,
+                //prompt: transcript,
+              }),
+            }
+          );
+          clearInterval(loadInterval);
+          messageDiv.innerHTML = " ";
+          const data = await response.json();
+          const parsedData = data.bot.trim(); // trims any trailing spaces/'\n'
+          //console.log("aires>>", parsedData);
+          setReply(parsedData);
+          aiSpeak();
+          typeText(messageDiv, parsedData);
+        } catch (err) {
+          //const err = await response.text();
+          clearInterval(loadInterval);
+          messageDiv.innerHTML = " ";
+          messageDiv.innerHTML = "Sorry, something went wrong";
+          setReply("Sorry, something went wrong");
+          aiSpeak();
+          //console.log(err);
+        }
 
-      if (response.ok) {
-        const data = await response.json();
-        const parsedData = data.bot.trim(); // trims any trailing spaces/'\n'
-        console.log("aires>>", parsedData);
-        setReply(parsedData);
-        aiSpeak();
-        typeText(messageDiv, parsedData);
-      } else {
-        const err = await response.text();
+        // if (response.ok) {
+        //   const data = await response.json();
+        //   const parsedData = data.bot.trim(); // trims any trailing spaces/'\n'
+        //   console.log("aires>>", parsedData);
+        //   setReply(parsedData);
+        //   aiSpeak();
+        //   typeText(messageDiv, parsedData);
+        // } else {
+        //   const err = await response.text();
 
-        messageDiv.innerHTML = "Something went wrong";
-        alert(err);
+        //   messageDiv.innerHTML = "Something went wrong";
+        //   alert(err);
+        // }
       }
-
-      // setReply(prompt);
-      // typeText(messageDiv, prompt);
-      // aiSpeak();
+    } else {
+      alert("Please check your internet connection");
     }
   };
 
@@ -191,65 +211,108 @@ function App() {
     setRecording(true);
   };
   recognition.onresult = (event) => {
-    console.log(event);
+    //console.log(event);
     const current = event.resultIndex;
     setTranscript(event.results[current][0].transcript);
-    console.log(transcriptRef.current);
+    // console.log(transcriptRef.current);
   };
   recognition.onend = () => {
     console.log("Speech Deactivated, you can shut up");
     setRecording(false);
-    console.log(transcriptRef.current);
+    //console.log(transcriptRef.current);
     handleRecordEnd();
   };
 
   const handleRecord = () => {
-    recognition.start();
+    if (navigator.onLine) {
+      recognition.start();
+    } else {
+      alert("Please check your internet connection");
+    }
   };
 
   const handleRecordEnd = async () => {
-    if (transcriptRef?.current !== "" && transcriptRef?.current?.length >= 5) {
-      // user's chatstripe
-      chatContainer.innerHTML += chatStripe(false, transcriptRef.current);
+    if (navigator.onLine) {
+      if (
+        transcriptRef?.current !== "" &&
+        transcriptRef?.current?.length >= 5
+      ) {
+        // user's chatstripe
+        chatContainer.innerHTML += chatStripe(false, transcriptRef.current);
 
-      // bot's chatstripe
-      const uniqueId = generateUniqueId();
-      chatContainer.innerHTML += chatStripe(true, " ", uniqueId);
+        // bot's chatstripe
+        const uniqueId = generateUniqueId();
+        chatContainer.innerHTML += chatStripe(true, " ", uniqueId);
 
-      // to focus scroll to the bottom
-      chatContainer.scrollTop = chatContainer.scrollHeight;
+        // to focus scroll to the bottom
+        chatContainer.scrollTop = chatContainer.scrollHeight;
 
-      // specific message div
-      const messageDiv = document.getElementById(uniqueId);
+        // specific message div
+        const messageDiv = document.getElementById(uniqueId);
 
-      // messageDiv.innerHTML = "..."
-      loader(messageDiv);
-      console.log("what im sending", transcriptRef.current);
-      const response = await fetch("http://localhost:5000/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          prompt: transcriptRef.current,
-        }),
-      });
+        // messageDiv.innerHTML = "..."
+        try {
+          loader(messageDiv);
+          //console.log("what im sending", transcriptRef.current);
+          const response = await fetch(
+            "https://odd-puce-betta-wrap.cyclic.app/",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                prompt: transcriptRef.current,
+              }),
+            }
+          );
+          clearInterval(loadInterval);
+          messageDiv.innerHTML = " ";
+          const data = await response.json();
+          const parsedData = data.bot.trim(); // trims any trailing spaces/'\n'
+          //console.log("aires>>", parsedData);
+          setReply(parsedData);
+          aiSpeak();
+          typeText(messageDiv, parsedData);
+        } catch (err) {
+          //const err = await response.text();
+          clearInterval(loadInterval);
+          messageDiv.innerHTML = " ";
+          messageDiv.innerHTML = "Sorry, something went wrong";
+          setReply("Sorry, something went wrong");
+          aiSpeak();
+          //console.log(err);
+        }
+        // loader(messageDiv);
+        // console.log("what im sending", transcriptRef.current);
+        // const response = await fetch("http://localhost:5000/", {
+        //   method: "POST",
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //   },
+        //   body: JSON.stringify({
+        //     prompt: transcriptRef.current,
+        //   }),
+        // });
 
-      clearInterval(loadInterval);
-      messageDiv.innerHTML = " ";
+        // clearInterval(loadInterval);
+        // messageDiv.innerHTML = " ";
 
-      if (response.ok) {
-        const data = await response.json();
-        const parsedData = data.bot.trim(); // trims any trailing spaces/'\n'
-        console.log("AI res>>", parsedData);
-        setReply(parsedData);
-        aiSpeak();
-        typeText(messageDiv, parsedData);
-      } else {
-        const err = await response.text();
-        messageDiv.innerHTML = "Something went wrong";
-        alert(err);
+        // if (response.ok) {
+        //   const data = await response.json();
+        //   const parsedData = data.bot.trim(); // trims any trailing spaces/'\n'
+        //   console.log("AI res>>", parsedData);
+        //   setReply(parsedData);
+        //   aiSpeak();
+        //   typeText(messageDiv, parsedData);
+        // } else {
+        //   const err = await response.text();
+        //   messageDiv.innerHTML = "Something went wrong";
+        //   alert(err);
+        // }
       }
+    } else {
+      alert("Please check your internet connection");
     }
   };
 
