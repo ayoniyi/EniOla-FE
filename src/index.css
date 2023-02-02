@@ -82,7 +82,6 @@ input {
   -ms-overflow-style: none;
   scrollbar-width: none;
 
-  padding-bottom: 20px;
   scroll-behavior: smooth;
   position: relative;
 }
@@ -199,6 +198,9 @@ input {
 }
 
 @media (max-width: 500px) {
+  #chat_container {
+    padding-bottom: 30px;
+  }
   .ai {
     margin-top: 5px;
     width: 95%;
@@ -208,5 +210,14 @@ input {
     width: 95%;
     margin-left: 5%;
     /* background: pink; */
+  }
+  .messages {
+    font-size: 13px;
+  }
+  .profile img {
+    width: 70%;
+    height: 70%;
+    min-width: 25px;
+    object-fit: contain;
   }
 }
