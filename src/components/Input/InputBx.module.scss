@@ -82,6 +82,7 @@
     form {
       input {
         height: 45px;
+        width: 80vw;
       }
       input:focus {
         font-size: 16px;
@@ -90,8 +91,8 @@
   }
   .micCircle {
     img {
-      width: 30px;
-      margin-left: -10px;
+      width: 35px;
+      margin-left: -15px;
     }
   }
   .submitText {
