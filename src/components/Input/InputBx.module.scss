@@ -65,3 +65,32 @@
     width: 100%;
   }
 }
+@media (max-width: 740px) {
+  .formBx {
+    form {
+      input {
+        width: 90vw;
+      }
+    }
+  }
+}
+@media (max-width: 500px) {
+  .formBx {
+    form {
+      input {
+        height: 45px;
+      }
+    }
+  }
+  .micCircle {
+    img {
+      width: 35px;
+      margin-left: -20px;
+    }
+  }
+  .submitText {
+    img {
+      width: 18px;
+    }
+  }
+}

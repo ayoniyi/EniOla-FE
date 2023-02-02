@@ -18,8 +18,11 @@ const SideBar2 = () => {
             <div className={style.btmText}>
               <div className={style.btmTextC}>
                 <p>
-                  This is a conversational AI app called EniOla. You can either
-                  type a message or speak to EniOla by recording a message.
+                  This is a conversational AI app called EniOla. <br />
+                  You can either type a message or speak to EniOla by recording
+                  a message. <br />
+                  Click the mic to record and once you stop talking your message
+                  is automatically sent.
                 </p>
                 <p>
                   EniOla might not speak to you depending on browser
