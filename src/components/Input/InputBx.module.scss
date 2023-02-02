@@ -69,10 +69,14 @@
   }
 }
 @media (max-width: 740px) {
+  .micCircle {
+    display: none;
+  }
   .formBx {
+    // background: pink;
     form {
       input {
-        width: 90vw;
+        width: 95vw;
       }
     }
   }
