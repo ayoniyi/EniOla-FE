@@ -40,9 +40,12 @@
       outline: none;
       border: 0;
       color: #fff;
-      font-size: 18px;
+      font-size: 14px;
 
       padding: 1em 3em 1em 1em;
+      &:disabled {
+        filter: blur(1.5px);
+      }
     }
     .submitText {
       position: relative;
@@ -50,6 +53,15 @@
       // position: fixed;
       margin-left: -40px;
       cursor: pointer;
+      background: none;
+      outline: none;
+      border: none;
     }
+  }
+}
+@media (max-width: 1080px) {
+  .container {
+    margin-left: 0;
+    width: 100%;
   }
 }

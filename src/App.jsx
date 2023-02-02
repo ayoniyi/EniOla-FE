@@ -9,13 +9,12 @@ import Enny from "./images/enny.svg";
 import User from "./images/user.svg";
 
 function App() {
-  const [prompt, setPrompt, promptRef] = useState("");
+  const [prompt, setPrompt] = useState("");
   const [reply, setReply, replyRef] = useState();
-  const [voices, setVoices, voicesRef] = useState([]);
+  const [voices, setVoices] = useState([]);
   const [transcript, setTranscript, transcriptRef] = useState();
+  const [recording, setRecording] = useState(false);
 
-  const form = document.querySelector("form");
-  const record = document.querySelector("#record");
   const chatContainer = document.querySelector("#chat_container");
   const synth = window.speechSynthesis;
 
@@ -73,19 +72,6 @@ function App() {
               </div>
           </div>
       `;
-    // return(
-    //   <div className="wrapper ${isAi && "ai"}">
-    //             <div class="chat">
-    //                 <div class="profile">
-    //                 <img
-    //                 src=${isAi ? Enny : User}
-    //                 alt="${isAi ? "bot" : "user"}"
-    //               />
-    //                 </div>
-    //                 <div className="messages" id=${uniqueId}>${value}</div>
-    //             </div>
-    //         </div>
-    // )
   }
 
   const handleInput = (event) => {
@@ -103,7 +89,7 @@ function App() {
     synth.onvoiceschanged = getVoices;
   }, []);
 
-  // Speak
+  // AI Speak
   const aiSpeak = () => {
     // Check if speaking
     if (synth.speaking) {
@@ -111,99 +97,174 @@ function App() {
       return;
     }
 
-    if (prompt !== "") {
-      // Get speak text
-      const speakText = new SpeechSynthesisUtterance(replyRef.current);
+    //if (prompt !== "") {
+    // Get speak text
+    const tooLong = "Sorry I am not saying all of that";
+    const speakText = new SpeechSynthesisUtterance(
+      replyRef.current.length >= 252 ? tooLong : replyRef.current
+    );
 
-      // Speak end
-      speakText.onend = (e) => {
-        console.log("Done speaking...");
-      };
+    // Speak end
+    speakText.onend = (e) => {
+      console.log("Done speaking...");
+    };
 
-      // Speak error
-      speakText.onerror = (e) => {
-        console.error("Something went wrong");
-      };
+    // Speak error
+    speakText.onerror = (e) => {
+      console.error("Something went wrong");
+    };
 
-      speakText.rate = 1;
-      speakText.pitch = 0.7;
-      speakText.lang = "en-GB";
-      speakText.voice = voices[50];
-      // Speak
-      synth.cancel();
-      synth.speak(speakText);
+    speakText.rate = 1;
+    speakText.pitch = 0.7;
+    speakText.lang = "en-GB";
+    speakText.voice = voices[50];
+    // Speak
+    synth.cancel();
+    synth.speak(speakText);
+    //}
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (prompt !== "" && prompt.length >= 5) {
+      // user's chatstripe
+      //chatContainer.innerHTML += chatStripe(false, transcript);
+      chatContainer.innerHTML += chatStripe(false, prompt);
+
+      // to clear the textarea input
+      setPrompt("");
+
+      // bot's chatstripe
+      const uniqueId = generateUniqueId();
+      chatContainer.innerHTML += chatStripe(true, " ", uniqueId);
+
+      // to focus scroll to the bottom
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+
+      // specific message div
+      const messageDiv = document.getElementById(uniqueId);
+
+      // messageDiv.innerHTML = "..."
+      loader(messageDiv);
+      console.log("what im sending", prompt);
+      const response = await fetch("http://localhost:5000/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          prompt: prompt,
+          //prompt: transcript,
+        }),
+      });
+
+      clearInterval(loadInterval);
+      messageDiv.innerHTML = " ";
+
+      if (response.ok) {
+        const data = await response.json();
+        const parsedData = data.bot.trim(); // trims any trailing spaces/'\n'
+        console.log("aires>>", parsedData);
+        setReply(parsedData);
+        aiSpeak();
+        typeText(messageDiv, parsedData);
+      } else {
+        const err = await response.text();
+
+        messageDiv.innerHTML = "Something went wrong";
+        alert(err);
+      }
+
+      // setReply(prompt);
+      // typeText(messageDiv, prompt);
+      // aiSpeak();
     }
   };
 
-  const handleSubmit = async () => {
-    //e.preventDefault();
+  //User Speak
+  const SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition;
+  const recognition = new SpeechRecognition();
 
-    //const data = new FormData(form);
+  recognition.onstart = () => {
+    console.log("Speech activated, you can now speak");
+    setRecording(true);
+  };
+  recognition.onresult = (event) => {
+    console.log(event);
+    const current = event.resultIndex;
+    setTranscript(event.results[current][0].transcript);
+    console.log(transcriptRef.current);
+  };
+  recognition.onend = () => {
+    console.log("Speech Deactivated, you can shut up");
+    setRecording(false);
+    console.log(transcriptRef.current);
+    handleRecordEnd();
+  };
 
-    // user's chatstripe
-    //chatContainer.innerHTML += chatStripe(false, transcript);
-    chatContainer.innerHTML += chatStripe(false, prompt);
+  const handleRecord = () => {
+    recognition.start();
+  };
 
-    // to clear the textarea input
-    //form.reset();
-    setPrompt("");
+  const handleRecordEnd = async () => {
+    if (transcriptRef?.current !== "" && transcriptRef?.current?.length >= 5) {
+      // user's chatstripe
+      chatContainer.innerHTML += chatStripe(false, transcriptRef.current);
 
-    // bot's chatstripe
-    const uniqueId = generateUniqueId();
-    chatContainer.innerHTML += chatStripe(true, " ", uniqueId);
+      // bot's chatstripe
+      const uniqueId = generateUniqueId();
+      chatContainer.innerHTML += chatStripe(true, " ", uniqueId);
 
-    // to focus scroll to the bottom
-    chatContainer.scrollTop = chatContainer.scrollHeight;
+      // to focus scroll to the bottom
+      chatContainer.scrollTop = chatContainer.scrollHeight;
 
-    // specific message div
-    const messageDiv = document.getElementById(uniqueId);
+      // specific message div
+      const messageDiv = document.getElementById(uniqueId);
 
-    // messageDiv.innerHTML = "..."
-    loader(messageDiv);
-    console.log("what im sending", prompt);
-    const response = await fetch("http://localhost:5000/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        prompt: prompt,
-        //prompt: transcript,
-      }),
-    });
+      // messageDiv.innerHTML = "..."
+      loader(messageDiv);
+      console.log("what im sending", transcriptRef.current);
+      const response = await fetch("http://localhost:5000/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          prompt: transcriptRef.current,
+        }),
+      });
 
-    clearInterval(loadInterval);
-    messageDiv.innerHTML = " ";
+      clearInterval(loadInterval);
+      messageDiv.innerHTML = " ";
 
-    if (response.ok) {
-      const data = await response.json();
-      const parsedData = data.bot.trim(); // trims any trailing spaces/'\n'
-      console.log("aires>>", parsedData);
-      setReply(parsedData);
-      typeText(messageDiv, parsedData);
-      aiSpeak();
-    } else {
-      const err = await response.text();
-
-      messageDiv.innerHTML = "Something went wrong";
-      alert(err);
+      if (response.ok) {
+        const data = await response.json();
+        const parsedData = data.bot.trim(); // trims any trailing spaces/'\n'
+        console.log("AI res>>", parsedData);
+        setReply(parsedData);
+        aiSpeak();
+        typeText(messageDiv, parsedData);
+      } else {
+        const err = await response.text();
+        messageDiv.innerHTML = "Something went wrong";
+        alert(err);
+      }
     }
-
-    // setReply(prompt);
-    // typeText(messageDiv, prompt);
-    // aiSpeak();
   };
 
   return (
     <>
       <SideBar />
-      <TopBar />
+      <TopBar recording={recording} />
       <div className={style.chatBody}>
         <div id="chat_container"></div>
       </div>
       <InputBox
         handleSubmit={handleSubmit}
         handleInput={handleInput}
+        handleRecord={handleRecord}
+        recording={recording}
         prompt={prompt}
       />
       <SideBar2 />

@@ -66,6 +66,19 @@
     }
   }
 }
+// .btmText {
+//   overflow: hidden;
+// }
+// .btmTextC {
+//   padding-left: 100%;
+//   animation: slide 10s infinite 3s linear;
+//   display: inline-block;
+// }
+@keyframes slide {
+  100% {
+    transform: translate(0, 100%);
+  }
+}
 .containerTop {
   position: fixed;
   background: #000;
@@ -91,5 +104,15 @@
       line-height: 2px;
       text-align: center;
     }
+  }
+}
+@media (max-width: 1080px) {
+  .container1,
+  .container2 {
+    display: none;
+  }
+  .containerTop {
+    margin-left: 0;
+    width: 100%;
   }
 }

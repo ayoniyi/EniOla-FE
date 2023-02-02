@@ -184,7 +184,7 @@ input {
 .ai .chat .messages {
   border-radius: 20px 50px 50px 0px;
   background: #2f3336;
-  min-height: 60px;
+  min-height: 36px;
 }
 .user .chat .messages {
   background: #6551f3;
