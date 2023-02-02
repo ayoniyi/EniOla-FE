@@ -115,7 +115,7 @@ function App() {
     };
 
     speakText.rate =
-      replyRef.current.length >= 150 && replyRef.current.length < 252 ? 1.2 : 1;
+      replyRef.current.length >= 150 && replyRef.current.length < 252 ? 1.1 : 1;
     speakText.pitch = 0.7;
     speakText.lang = "en-GB";
     speakText.voice = voices[50];
