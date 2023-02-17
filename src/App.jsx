@@ -318,19 +318,24 @@ function App() {
 
   return (
     <>
-      <SideBar />
-      <TopBar recording={recording} />
-      <div className={style.chatBody}>
-        <div id="chat_container"></div>
+      <div className="mMsg">
+        <p>App can not be accessed on mobile, please view on desktop device.</p>
       </div>
-      <InputBox
-        handleSubmit={handleSubmit}
-        handleInput={handleInput}
-        handleRecord={handleRecord}
-        recording={recording}
-        prompt={prompt}
-      />
-      <SideBar2 />
+      <div className="app">
+        <SideBar />
+        <TopBar recording={recording} />
+        <div className={style.chatBody}>
+          <div id="chat_container"></div>
+        </div>
+        <InputBox
+          handleSubmit={handleSubmit}
+          handleInput={handleInput}
+          handleRecord={handleRecord}
+          recording={recording}
+          prompt={prompt}
+        />
+        <SideBar2 />
+      </div>
     </>
   );
 }
