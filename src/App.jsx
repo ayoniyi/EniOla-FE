@@ -152,7 +152,8 @@ function App() {
           loader(messageDiv);
           console.log("what im sending", prompt);
           const response = await fetch(
-            "https://odd-puce-betta-wrap.cyclic.app/",
+            //"https://odd-puce-betta-wrap.cyclic.app/",
+            "http://localhost:5000",
             {
               method: "POST",
               headers: {
@@ -255,7 +256,8 @@ function App() {
           loader(messageDiv);
           //console.log("what im sending", transcriptRef.current);
           const response = await fetch(
-            "https://odd-puce-betta-wrap.cyclic.app/",
+            //"https://odd-puce-betta-wrap.cyclic.app/",
+            "http://localhost:5000",
             {
               method: "POST",
               headers: {
@@ -278,8 +280,11 @@ function App() {
           //const err = await response.text();
           clearInterval(loadInterval);
           messageDiv.innerHTML = " ";
-          messageDiv.innerHTML = "Sorry, something went wrong";
-          setReply("Sorry, something went wrong");
+          messageDiv.innerHTML =
+            "Sorry, I can't reply to that as you've run out of open AI credits";
+          setReply(
+            "Sorry, I can't reply to that as you've run out of open AI credits"
+          );
           aiSpeak();
           //console.log(err);
         }
