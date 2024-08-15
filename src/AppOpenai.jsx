@@ -7,9 +7,8 @@ import SideBar2 from "./components/SideBar/SideBar2";
 import TopBar from "./components/SideBar/TopBar";
 import Enny from "./images/enny.svg";
 import User from "./images/user.svg";
-import model from "./gemini";
 
-function App() {
+function AppOpenai() {
   const [prompt, setPrompt] = useState("");
   const [reply, setReply, replyRef] = useState();
   const [voices, setVoices] = useState([]);
@@ -152,22 +151,28 @@ function App() {
         try {
           loader(messageDiv);
           console.log("what im sending", prompt);
-          //
-
-          const result = await model.generateContent(prompt);
-          const response = result?.response;
-          const text = response.text();
-          //console.log("texxt", text);
-
-          //
+          const response = await fetch(
+            "https://odd-puce-betta-wrap.cyclic.app/",
+            //"http://localhost:5000",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                prompt: prompt,
+                //prompt: transcript,
+              }),
+            }
+          );
           clearInterval(loadInterval);
           messageDiv.innerHTML = " ";
-          //const data = await response.json();
-          //const parsedData = data.bot.trim(); // trims any trailing spaces/'\n'
+          const data = await response.json();
+          const parsedData = data.bot.trim(); // trims any trailing spaces/'\n'
           //console.log("aires>>", parsedData);
-          setReply(text);
+          setReply(parsedData);
           aiSpeak();
-          typeText(messageDiv, text);
+          typeText(messageDiv, parsedData);
         } catch (err) {
           //const err = await response.text();
           clearInterval(loadInterval);
@@ -175,11 +180,27 @@ function App() {
           // messageDiv.innerHTML = "Sorry, something went wrong";
           // setReply("Sorry, something went wrong");
           messageDiv.innerHTML =
-            "Sorry there was an error so I can't reply to that. ";
-          setReply("Sorry there was an error so I can't reply to that.");
+            "Sorry, I can't reply to that as you've run out of open AI credits";
+          setReply(
+            "Sorry, I can't reply to that as you've run out of open AI credits"
+          );
           aiSpeak();
-          console.log(err);
+          //console.log(err);
         }
+
+        // if (response.ok) {
+        //   const data = await response.json();
+        //   const parsedData = data.bot.trim(); // trims any trailing spaces/'\n'
+        //   console.log("aires>>", parsedData);
+        //   setReply(parsedData);
+        //   aiSpeak();
+        //   typeText(messageDiv, parsedData);
+        // } else {
+        //   const err = await response.text();
+
+        //   messageDiv.innerHTML = "Something went wrong";
+        //   alert(err);
+        // }
       }
     } else {
       alert("Please check your internet connection");
@@ -238,34 +259,39 @@ function App() {
         // messageDiv.innerHTML = "..."
         try {
           loader(messageDiv);
-          console.log("what im sending", transcriptRef.current);
-          //
-
-          const result = await model.generateContent(transcriptRef.current);
-          const response = result?.response;
-          const text = response.text();
-          //console.log("texxt", text);
-
-          //
+          //console.log("what im sending", transcriptRef.current);
+          const response = await fetch(
+            "https://odd-puce-betta-wrap.cyclic.app/",
+            //"http://localhost:5000",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                prompt: transcriptRef.current,
+              }),
+            }
+          );
           clearInterval(loadInterval);
           messageDiv.innerHTML = " ";
-          //const data = await response.json();
-          //const parsedData = data.bot.trim(); // trims any trailing spaces/'\n'
+          const data = await response.json();
+          const parsedData = data.bot.trim(); // trims any trailing spaces/'\n'
           //console.log("aires>>", parsedData);
-          setReply(text);
+          setReply(parsedData);
           aiSpeak();
-          typeText(messageDiv, text);
+          typeText(messageDiv, parsedData);
         } catch (err) {
           //const err = await response.text();
           clearInterval(loadInterval);
           messageDiv.innerHTML = " ";
-
           messageDiv.innerHTML =
-            "Sorry there was an error so I can't reply to that. ";
-          setReply("Sorry there was an error so I can't reply to that.");
-
+            "Sorry, I can't reply to that as you've run out of open AI credits";
+          setReply(
+            "Sorry, I can't reply to that as you've run out of open AI credits"
+          );
           aiSpeak();
-          console.log(err);
+          //console.log(err);
         }
         // loader(messageDiv);
         // console.log("what im sending", transcriptRef.current);
@@ -324,4 +350,4 @@ function App() {
   );
 }
 
-export default App;
+export default AppOpenai;
