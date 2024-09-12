@@ -43,6 +43,9 @@
     img {
       border-radius: 50%;
       border: 3px solid #6551f3;
+      //border: 3px solid rgb(0, 191, 255);
+      width: 125px;
+      transform: rotate(-20deg);
     }
     h1 {
       font-family: "Luminari";
@@ -104,6 +107,7 @@
       height: 50px;
       border-radius: 50%;
       border: 1px solid #292929;
+      transform: rotate(-20deg);
     }
     p {
       line-height: 2px;

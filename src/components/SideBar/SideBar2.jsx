@@ -1,6 +1,6 @@
 import Marquee from "react-fast-marquee";
 import style from "./SideBar.module.scss";
-import Logo from "./enny2.svg";
+import Logo from "./enny3.JPG";
 
 const SideBar2 = () => {
   return (

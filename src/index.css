@@ -189,7 +189,7 @@ input {
   min-height: 36px;
 }
 .user .chat .messages {
-  background: #6551f3;
+  background: rgb(0, 191, 255);
   border-radius: 10px 20px 0px 10px;
   /* width: 10%; */
 }

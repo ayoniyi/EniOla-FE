@@ -5,7 +5,7 @@ import InputBox from "./components/Input/InputBx";
 import SideBar from "./components/SideBar/SideBar";
 import SideBar2 from "./components/SideBar/SideBar2";
 import TopBar from "./components/SideBar/TopBar";
-import Enny from "./images/enny.svg";
+import Enny from "./images/enny2.JPG";
 import User from "./images/user.svg";
 import model from "./gemini";
 

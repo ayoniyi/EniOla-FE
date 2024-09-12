@@ -1,5 +1,5 @@
 import style from "./SideBar.module.scss";
-import Logo from "./enny.svg";
+import Logo from "./enny3.JPG";
 
 const TopBar = ({ recording }) => {
   return (
