@@ -18,9 +18,8 @@ const SideBar2 = () => {
             <div className={style.btmText}>
               <div className={style.btmTextC}>
                 <p>
-                  This is a conversational AI app called EniOla. <br />
-                  You can either type a message or speak to EniOla by recording
-                  a message. <br />
+                  This is a conversational AI app. <br />
+                  You can either type a message or record a message. <br />
                 </p>
                 <p>
                   {" "}
@@ -30,10 +29,10 @@ const SideBar2 = () => {
                     message is automatically sent.
                   </span>
                 </p>
-                <p>
+                {/* <p>
                   EniOla might not speak to you depending on browser
                   compatibility, but would always type a response.
-                </p>
+                </p> */}
               </div>
             </div>
           </div>
